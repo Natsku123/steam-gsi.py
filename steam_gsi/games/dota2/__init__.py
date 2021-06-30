@@ -1,4 +1,4 @@
-from . import Base
+from steam_gsi.games import Base
 from enum import Enum
 from dataclasses import dataclass, field
 
@@ -180,6 +180,14 @@ class Map(Base):
 
 
 @dataclass
+class Auth(Base):
+    """
+    Auth object
+    """
+    token: str
+
+
+@dataclass
 class GameState(Base):
     """
     GameState Root Object
@@ -189,3 +197,4 @@ class GameState(Base):
     player: Player = field(default=None)
     hero: Hero = field(default=None)
     previously: 'GameState' = field(default=None)
+    auth: Auth = field(default=None)

@@ -1,5 +1,5 @@
 import json
-from typing import Union, Dict
+from typing import Union, Dict, Any, List
 from dataclasses import dataclass, asdict, fields
 
 
@@ -12,6 +12,29 @@ class Base:
     """
     Base Object for all game state dataclasses
     """
+
+    def get_by_path(self, path: List[str]) -> Any:
+        """
+        Get sub object / attribute by path
+
+        :param path: List of string (path)
+        :return: Target of path
+        """
+
+        # Start from current object
+        current = self
+
+        # Traverse the path
+        for attr in path:
+
+            # Check if path exists
+            if not hasattr(current, attr):
+                return None
+
+            # Update current
+            current = getattr(current, attr)
+
+        return current
 
     def to_json(self):
         """
@@ -28,7 +51,6 @@ class Base:
 
         :param data: JSON string or dict
         :return: new instance of class
-        :raises SerializationError when data has unknown attributes
         """
 
         # load JSON if string
@@ -49,13 +71,15 @@ class Base:
 
         for k in fields(cls):
             if k.name not in new_data:
-                raise SerializationError("Missing attribute: " + k.name)
-
-            # Call recursively the serialization of a sub object, if necessary
-            if issubclass(Base, k.type):
-                v = k.type.from_json(new_data[k.name])
+                v = None
             else:
-                v = new_data[k.name]
+
+                # Call recursively the serialization of a sub object,
+                # if necessary
+                if issubclass(Base, k.type):
+                    v = k.type.from_json(new_data[k.name])
+                else:
+                    v = new_data[k.name]
 
             args.append(v)
 
