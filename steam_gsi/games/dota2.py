@@ -4,83 +4,143 @@ from dataclasses import dataclass, field
 
 
 class TeamPrefixes(str, Enum):
+    """
+    Prefixes used for the teams
+    """
     RADIANT = "dota_goodguys"
     DIRE = "dota_badguys"
 
 
 class GameStates(str, Enum):
+    """
+    Overview of Game State
+    """
     IN_PROGRESS = "DOTA_GAMERULES_STATE_GAME_IN_PROGRESS"
     POST_GAME = "DOTA_GAMERULES_STATE_POST_GAME"
     PRE_GAME = "DOTA_GAMERULES_STATE_PRE_GAME"
 
 
 class PlayerActivity(str, Enum):
+    """
+    Player Activity status
+    """
     PLAYING = "playing"
 
 
 @dataclass
 class Building(Base):
-    name: str
+    """
+    Building on the map
+    """
     health: int
     max_health: int
 
 
 @dataclass
-class TeamBuildings(Base):
-    top_t1: Building = field(default=None)
-    top_t2: Building = field(default=None)
-    top_t3: Building = field(default=None)
-    top_t4: Building = field(default=None)
-    mid_t1: Building = field(default=None)
-    mid_t2: Building = field(default=None)
-    mid_t3: Building = field(default=None)
-    bot_t1: Building = field(default=None)
-    bot_t2: Building = field(default=None)
-    bot_t3: Building = field(default=None)
-    bot_t4: Building = field(default=None)
-    top_rax_melee: Building = field(default=None)
-    top_rax_ranged: Building = field(default=None)
-    mid_rax_melee: Building = field(default=None)
-    mid_rax_ranged: Building = field(default=None)
-    bot_rax_melee: Building = field(default=None)
-    bot_rax_ranged: Building = field(default=None)
-    ancient: Building = field(default=None)
+class TeamBuildingsRadiant(Base):
+    """
+    Buildings for Radiant
+    """
+    dota_goodguys_tower1_top: Building = field(default=None)
+    dota_goodguys_tower2_top: Building = field(default=None)
+    dota_goodguys_tower3_top: Building = field(default=None)
+    dota_goodguys_tower4_top: Building = field(default=None)
+    dota_goodguys_tower1_mid: Building = field(default=None)
+    dota_goodguys_tower2_mid: Building = field(default=None)
+    dota_goodguys_tower3_mid: Building = field(default=None)
+    dota_goodguys_tower1_bot: Building = field(default=None)
+    dota_goodguys_tower2_bot: Building = field(default=None)
+    dota_goodguys_tower3_bot: Building = field(default=None)
+    dota_goodguys_tower4_bot: Building = field(default=None)
+    good_rax_melee_top: Building = field(default=None)
+    good_rax_ranged_top: Building = field(default=None)
+    good_rax_melee_mid: Building = field(default=None)
+    good_rax_ranged_mid: Building = field(default=None)
+    good_rax_melee_bot: Building = field(default=None)
+    good_rax_ranged_bot: Building = field(default=None)
+    dota_goodguys_fort: Building = field(default=None)
+
+
+@dataclass
+class TeamBuildingsDire(Base):
+    """
+    Buildings for Dire
+    """
+    dota_badguys_tower1_top: Building = field(default=None)
+    dota_badguys_tower2_top: Building = field(default=None)
+    dota_badguys_tower3_top: Building = field(default=None)
+    dota_badguys_tower4_top: Building = field(default=None)
+    dota_badguys_tower1_mid: Building = field(default=None)
+    dota_badguys_tower2_mid: Building = field(default=None)
+    dota_badguys_tower3_mid: Building = field(default=None)
+    dota_badguys_tower1_bot: Building = field(default=None)
+    dota_badguys_tower2_bot: Building = field(default=None)
+    dota_badguys_tower3_bot: Building = field(default=None)
+    dota_badguys_tower4_bot: Building = field(default=None)
+    bad_rax_melee_top: Building = field(default=None)
+    bad_rax_ranged_top: Building = field(default=None)
+    bad_rax_melee_mid: Building = field(default=None)
+    bad_rax_ranged_mid: Building = field(default=None)
+    bad_rax_melee_bot: Building = field(default=None)
+    bad_rax_ranged_bot: Building = field(default=None)
+    dota_badguys_fort: Building = field(default=None)
 
 
 @dataclass
 class Buildings(Base):
-    radiant: TeamBuildings = field(default=None)
-    dire: TeamBuildings = field(default=None)
+    """
+    Buildings Root Object
+    """
+    radiant: TeamBuildingsRadiant = field(default=None)
+    dire: TeamBuildingsDire = field(default=None)
 
 
 @dataclass
 class Hero(Base):
+    """
+    Hero selected played
+    """
     id: int
 
 
 @dataclass
 class Abilities(Base):
+    """
+    Available abilities
+    """
     pass
 
 
 @dataclass
 class Items(Base):
+    """
+    Available items
+    """
     pass
 
 
 @dataclass
 class Draft(Base):
+    """
+    Drafted heroes
+    """
     pass
 
 
 @dataclass
 class Wearables(Base):
+    """
+    Wearables
+    """
     pass
 
 
 @dataclass
 class Player(Base):
-    steam_id: str
+    """
+    Player-object
+    """
+    steamid: str
     name: str
     activity: PlayerActivity
     kills: int
@@ -103,8 +163,11 @@ class Player(Base):
 
 @dataclass
 class Map(Base):
+    """
+    Map / Game data
+    """
     name: str
-    match_id: str
+    matchid: str
     game_time: int
     clock_time: int
     daytime: bool
@@ -118,6 +181,9 @@ class Map(Base):
 
 @dataclass
 class GameState(Base):
+    """
+    GameState Root Object
+    """
     buildings: Buildings = field(default=None)
     map: Map = field(default=None)
     player: Player = field(default=None)
