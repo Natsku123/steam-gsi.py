@@ -5,6 +5,10 @@ from aiohttp.web import Request, Response
 from typing import Union, List
 
 from .logs import logger
+from .datastorage import update_game_state
+from .events import event_trigger
+
+from .games.dota2 import GameState as Dota2GameState
 
 # SLEEP DELAY is the maximum delay that the server takes to stop, currently
 # is pretty high since it gives more cpu time for other asynchronous functions.
@@ -66,6 +70,25 @@ class GSIServer:
         if 'auth' not in content or 'token' not in content['auth'] or \
                 not self.check_token(content['auth']['token']):
             return Response(status=401)
+
+        # Game State Provider check
+        if 'provider' in content:
+
+            # If Provider is Dota 2, update Dota 2 Game State
+            if content['provider']['name'] == "Dota 2":
+
+                # Updated game state with actual object
+                gs = update_game_state(
+                    content, content['auth']['token'], Dota2GameState
+                )
+
+                # Trigger events registered events
+                event_trigger(gs)
+            else:
+                logger.error(
+                    f"ImplementationError: Game state updates for "
+                    f"{content['provider']['name']} do not exist."
+                )
 
         return Response(status=200)
 
